@@ -51,7 +51,20 @@ sc = SparkContext.getOrCreate(conf=conf)
 spark = SparkSession(sc)
 ```
 ## Reading and operations on a CSV file using Pyspark
-Below cell will gives how to read a file
+Below cell will gives how to read a file and select some columns in a file
 ```
 final_scheme_data = spark.read.csv('AXA_EF_March.csv', inferSchema=True, header=True)
+final_scheme_data = final_scheme_data.select(['scheme_plan', 'calculated_date', 'today_PU', 'today_RU', 'balance_units'])
+final_scheme_data.show() #used for showing the table.
+```
+The output is:
+```
++-----------+-------------------+--------+--------+--------------+
+|scheme_plan|    calculated_date|today_PU|today_RU| balance_units|
++-----------+-------------------+--------+--------+--------------+
+|      EF_DG|2020-03-01 00:00:00|     0.0|     0.0|   6046169.596|
+|      EF_DB|2020-03-01 00:00:00|     0.0|     0.0|      5503.782|
+|      EF_EB|2020-03-01 00:00:00|     0.0|     0.0|      9436.988|
+|      EF_RQ|2020-03-01 00:00:00|     0.0|     0.0|    845877.916|
+|      EF_RG|2020-03-01 00:00:00|     0.0|     0.0|4.1670482989E7|
 ```
