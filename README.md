@@ -52,7 +52,9 @@ spark = SparkSession(sc)
 ```
 ## Reading and operations on a CSV file using Pyspark
 Below cell will gives how to read a file and select some columns in a file
+
 * we are reading csv file named 'AXA_EF_March.csv'
+
 ```bash
 final_scheme_data = spark.read.csv('AXA_EF_March.csv', inferSchema=True, header=True)
 final_scheme_data = final_scheme_data.select(['scheme_plan', 'calculated_date', 'today_PU', 'today_RU', 'balance_units'])
@@ -69,7 +71,7 @@ The output is:
 |      EF_RQ|2020-03-01 00:00:00|     0.0|     0.0|    845877.916|
 |      EF_RG|2020-03-01 00:00:00|     0.0|     0.0|4.1670482989E7|
 ```
-* Converting the [calculated_date] in a specific date format
+* Converting the `calculated_date` in a specific date format
 
 ```
 final_scheme_data = final_scheme_data.withColumn('calculated_date', to_timestamp(col('calculated_date'), 'yyyy-MM-dd').cast('date'))
@@ -110,7 +112,8 @@ the output with orderby of 'scheme_plan' and 'calculated_date' is:
   * As before table we are concating the 'fn_scheme' and 'fn_plan' with '_' and assigning to 'scheme_plan' column.(NOTE:if column not exists it will automatically create a column)
   
   * Then we are Concating the two columns 'scheme_plan' and 'fn_fromdt' with '_' and assigning into 'scheme_plan_date'.
-  [output is:]
+  
+  output is:
   
 ```
 +---------+-------+----------+------+----------+----------+----------+----------+-----------+----------------+
