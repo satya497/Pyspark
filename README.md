@@ -82,10 +82,12 @@ final_scheme_data = final_scheme_data.withColumn('EffectiveNav', date_sub(col('c
 ```
 
 * Concating the two columns 'scheme_plan' and 'EffectiveNav' with '_' and assigning into 'scheme_plan_date'
+
 ```
 final_scheme_data = final_scheme_data.withColumn('scheme_plan_date', concat(col('scheme_plan'), lit('_'), col('EffectiveNav')))
 final_scheme_data.orderBy([col('scheme_plan'), col('calculated_date')]).show()
 ```
+
 the output with orderby of 'scheme_plan' and 'calculated_date' is:
   
 ```
@@ -98,14 +100,20 @@ the output with orderby of 'scheme_plan' and 'calculated_date' is:
 |      EF_DB|     2020-03-04|     0.0|     0.0|     5503.782|  2020-03-03|EF_DB_2020-03-03|
 |      EF_DB|     2020-03-05|     0.0|     0.0|     5503.782|  2020-03-04|EF_DB_2020-03-04|
 ```
+
 * Now we are Reading the another csv file with Named 'nav_master.csv' and applying some operations like above,they are:
-  ** Changing the date format of 'fn_fromdt' column.
-  ** we are doing orderby on 'fn_fromdt' column.
-  ** As before table we are concating the 'fn_scheme' and 'fn_plan' with '_' and assigning to 'scheme_plan' column.(NOTE:if column not exists it will automatically create a column)
-  **  Then we are Concating the two columns 'scheme_plan' and 'fn_fromdt' with '_' and assigning into 'scheme_plan_date'.
+
+  * Changing the date format of 'fn_fromdt' column.
+  
+  * we are doing orderby on 'fn_fromdt' column.
+  
+  * As before table we are concating the 'fn_scheme' and 'fn_plan' with '_' and assigning to 'scheme_plan' column.(NOTE:if column not exists it will automatically create a column)
+  
+  * Then we are Concating the two columns 'scheme_plan' and 'fn_fromdt' with '_' and assigning into 'scheme_plan_date'.
   [output is:]
-  ```
-  +---------+-------+----------+------+----------+----------+----------+----------+-----------+----------------+
+  
+```
++---------+-------+----------+------+----------+----------+----------+----------+-----------+----------------+
 |fn_scheme|fn_plan|      code|fn_nav| fn_fromdt|   fn_todt|  fn_entdt|  fn_enddt|scheme_plan|scheme_plan_date|
 +---------+-------+----------+------+----------+----------+----------+----------+-----------+----------------+
 |       EF|     DB|EF_DB43864| 20.17|2020-02-03|03-02-2020|03-02-2020|03-02-2020|      EF_DB|EF_DB_2020-02-03|
@@ -113,14 +121,20 @@ the output with orderby of 'scheme_plan' and 'calculated_date' is:
 |       EF|     DB|EF_DB43866| 20.71|2020-02-05|05-02-2020|05-02-2020|05-02-2020|      EF_DB|EF_DB_2020-02-05|
 |       EF|     DB|EF_DB43867| 20.78|2020-02-06|06-02-2020|06-02-2020|06-02-2020|      EF_DB|EF_DB_2020-02-06|
 |       EF|     DB|EF_DB43868| 20.85|2020-02-07|07-02-2020|07-02-2020|07-02-2020|      EF_DB|EF_DB_2020-02-07|
- ```
+```
+ 
  * Now we are joining the Two Tables based on some conditions.
-  we joining based on 'scheme_plan_date' column (final_scheme_data table left join to nav_data table)
-  Applying filter on result table as Where 'scheme_plan' == 'EF_DB'
+ 
+    * we joining based on 'scheme_plan_date' column (final_scheme_data table left join to nav_data table)
+  
+    * Applying filter on result table as Where 'scheme_plan' == 'EF_DB'
+  
 ```
 final_scheme_data.join(nav_data.select(['scheme_plan_date','fn_fromdt', 'fn_nav']), on='scheme_plan_date', how='left').filter(col('scheme_plan') == 'EF_DB').show()
 ```
+
 The resultant output is:
+
 ```
 +----------------+-----------+---------------+--------+--------+-------------+------------+----------+------+
 |scheme_plan_date|scheme_plan|calculated_date|today_PU|today_RU|balance_units|EffectiveNav| fn_fromdt|fn_nav|
@@ -131,3 +145,8 @@ The resultant output is:
 |EF_DB_2020-03-03|      EF_DB|     2020-03-04|     0.0|     0.0|     5503.782|  2020-03-03|2020-03-03| 20.02|
 |EF_DB_2020-03-04|      EF_DB|     2020-03-05|     0.0|     0.0|     5503.782|  2020-03-04|2020-03-04| 19.82|
 ```
+Thank You.
+
+Happy Coding.
+
+Satya.y
