@@ -70,13 +70,20 @@ The output is:
 |      EF_RG|2020-03-01 00:00:00|     0.0|     0.0|4.1670482989E7|
 ```
 * Converting the [calculated_date] in a specific date format
+
 ```final_scheme_data = final_scheme_data.withColumn('calculated_date', to_timestamp(col('calculated_date'), 'yyyy-MM-dd').cast('date'))```
+
 * Creating a column 'EffectiveNav' and Assigning a before day of 'calculated_date'
+
 ```final_scheme_data = final_scheme_data.withColumn('EffectiveNav', date_sub(col('calculated_date'), 1))```
+
 * Concating the two columns 'scheme_plan' and 'EffectiveNav' with '_' and assigning into 'scheme_plan_date'
+
 ```final_scheme_data = final_scheme_data.withColumn('scheme_plan_date', concat(col('scheme_plan'), lit('_'), col('EffectiveNav')))
 final_scheme_data.orderBy([col('scheme_plan'), col('calculated_date')]).show()```
+
   output is:
+  
 ```
 +-----------+---------------+--------+--------+-------------+------------+----------------+
 |scheme_plan|calculated_date|today_PU|today_RU|balance_units|EffectiveNav|scheme_plan_date|
