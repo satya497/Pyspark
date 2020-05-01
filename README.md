@@ -52,13 +52,14 @@ spark = SparkSession(sc)
 ```
 ## Reading and operations on a CSV file using Pyspark
 Below cell will gives how to read a file and select some columns in a file
-```bash
-▶final_scheme_data = spark.read.csv('AXA_EF_March.csv', inferSchema=True, header=True)
+* we are reading csv file named 'AXA_EF_March.csv'
+```
+final_scheme_data = spark.read.csv('AXA_EF_March.csv', inferSchema=True, header=True)
 final_scheme_data = final_scheme_data.select(['scheme_plan', 'calculated_date', 'today_PU', 'today_RU', 'balance_units'])
 final_scheme_data.show() #used for showing the table.
 ```
 The output is:
-```bash
+```
 +-----------+-------------------+--------+--------+--------------+
 |scheme_plan|    calculated_date|today_PU|today_RU| balance_units|
 +-----------+-------------------+--------+--------+--------------+
@@ -68,3 +69,22 @@ The output is:
 |      EF_RQ|2020-03-01 00:00:00|     0.0|     0.0|    845877.916|
 |      EF_RG|2020-03-01 00:00:00|     0.0|     0.0|4.1670482989E7|
 ```
+* Converting the [calculated_date] in a specific date format
+```final_scheme_data = final_scheme_data.withColumn('calculated_date', to_timestamp(col('calculated_date'), 'yyyy-MM-dd').cast('date'))```
+* Creating a column 'EffectiveNav' and Assigning a before day of 'calculated_date'
+```final_scheme_data = final_scheme_data.withColumn('EffectiveNav', date_sub(col('calculated_date'), 1))```
+* Concating the two columns 'scheme_plan' and 'EffectiveNav' with '_' and assigning into 'scheme_plan_date'
+```final_scheme_data = final_scheme_data.withColumn('scheme_plan_date', concat(col('scheme_plan'), lit('_'), col('EffectiveNav')))
+final_scheme_data.orderBy([col('scheme_plan'), col('calculated_date')]).show()```
+  output is:
+```
++-----------+---------------+--------+--------+-------------+------------+----------------+
+|scheme_plan|calculated_date|today_PU|today_RU|balance_units|EffectiveNav|scheme_plan_date|
++-----------+---------------+--------+--------+-------------+------------+----------------+
+|      EF_DB|     2020-03-01|     0.0|     0.0|     5503.782|  2020-02-29|EF_DB_2020-02-29|
+|      EF_DB|     2020-03-02|     0.0|     0.0|     5503.782|  2020-03-01|EF_DB_2020-03-01|
+|      EF_DB|     2020-03-03|     0.0|     0.0|     5503.782|  2020-03-02|EF_DB_2020-03-02|
+|      EF_DB|     2020-03-04|     0.0|     0.0|     5503.782|  2020-03-03|EF_DB_2020-03-03|
+|      EF_DB|     2020-03-05|     0.0|     0.0|     5503.782|  2020-03-04|EF_DB_2020-03-04|
+```
+
