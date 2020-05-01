@@ -53,7 +53,7 @@ spark = SparkSession(sc)
 ## Reading and operations on a CSV file using Pyspark
 Below cell will gives how to read a file and select some columns in a file
 * we are reading csv file named 'AXA_EF_March.csv'
-```
+```bash
 final_scheme_data = spark.read.csv('AXA_EF_March.csv', inferSchema=True, header=True)
 final_scheme_data = final_scheme_data.select(['scheme_plan', 'calculated_date', 'today_PU', 'today_RU', 'balance_units'])
 final_scheme_data.show() #used for showing the table.
@@ -71,18 +71,22 @@ The output is:
 ```
 * Converting the [calculated_date] in a specific date format
 
-```final_scheme_data = final_scheme_data.withColumn('calculated_date', to_timestamp(col('calculated_date'), 'yyyy-MM-dd').cast('date'))```
+```
+final_scheme_data = final_scheme_data.withColumn('calculated_date', to_timestamp(col('calculated_date'), 'yyyy-MM-dd').cast('date'))
+```
 
 * Creating a column 'EffectiveNav' and Assigning a before day of 'calculated_date'
 
-```final_scheme_data = final_scheme_data.withColumn('EffectiveNav', date_sub(col('calculated_date'), 1))```
+```
+final_scheme_data = final_scheme_data.withColumn('EffectiveNav', date_sub(col('calculated_date'), 1))
+```
 
 * Concating the two columns 'scheme_plan' and 'EffectiveNav' with '_' and assigning into 'scheme_plan_date'
-
-```final_scheme_data = final_scheme_data.withColumn('scheme_plan_date', concat(col('scheme_plan'), lit('_'), col('EffectiveNav')))
-final_scheme_data.orderBy([col('scheme_plan'), col('calculated_date')]).show()```
-
-  output is:
+```
+final_scheme_data = final_scheme_data.withColumn('scheme_plan_date', concat(col('scheme_plan'), lit('_'), col('EffectiveNav')))
+final_scheme_data.orderBy([col('scheme_plan'), col('calculated_date')]).show()
+```
+output is:
   
 ```
 +-----------+---------------+--------+--------+-------------+------------+----------------+
