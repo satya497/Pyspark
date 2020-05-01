@@ -52,13 +52,13 @@ spark = SparkSession(sc)
 ```
 ## Reading and operations on a CSV file using Pyspark
 Below cell will gives how to read a file and select some columns in a file
-```
-final_scheme_data = spark.read.csv('AXA_EF_March.csv', inferSchema=True, header=True)
+```bash
+▶final_scheme_data = spark.read.csv('AXA_EF_March.csv', inferSchema=True, header=True)
 final_scheme_data = final_scheme_data.select(['scheme_plan', 'calculated_date', 'today_PU', 'today_RU', 'balance_units'])
 final_scheme_data.show() #used for showing the table.
 ```
 The output is:
-```
+```bash
 +-----------+-------------------+--------+--------+--------------+
 |scheme_plan|    calculated_date|today_PU|today_RU| balance_units|
 +-----------+-------------------+--------+--------+--------------+
