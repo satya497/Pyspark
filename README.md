@@ -50,3 +50,8 @@ conf.setMaster("local").setAppName("My app")
 sc = SparkContext.getOrCreate(conf=conf)
 spark = SparkSession(sc)
 ```
+## Reading and operations on a CSV file using Pyspark
+Below cell will gives how to read a file
+```
+final_scheme_data = spark.read.csv('AXA_EF_March.csv', inferSchema=True, header=True)
+```
